@@ -4,20 +4,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <title>Document</title>
 </head>
 <body>
 
     <h1>Web de Alfombras</h1>
 
-    <br><label for=""> Pais: </label><input type="text" id="input_pais" placeholder="Pais de origen" >
-    <br><label for=""> Precio: </label><input type="number" id="input_precio" placeholder="Precio" >
-    <br><label for=""> En Stock </label><input type="checkbox" id="input_stock">
-    <br>
-    <input type="input" id="button_add" value="añadir" onclick=" new Methods().createNewAlfombra() " >
-    <input type="button" id="button_total" onclick="calculateTotal()"  value="Calcular el precio total del pedido" >
-    <input type="button" id="button_total_alfombras" onclick="calculateTotalunits()" value="Calcular el total de Alfombras" >
-    <input type="button" id="button_clean" onclick="deleteAll()"  value="Borrar todo" >
+    <div class="form-group" >
+        <br><label for=""> Pais: </label><input type="text" id="input_pais" placeholder="Pais de origen" >
+
+    </div>
+    <div class="form-group" >
+        <label for=""> Precio: </label><input type="number" id="input_precio" placeholder="Precio" >
+
+    </div>
+    <div class="form-group" >
+
+      <label for=""> En Stock </label><input type="checkbox" id="input_stock">
+    </div>
+    
+    <input type="button" id="button_total" onclick="new UserInterface().ShowTotalPrice()"  value="Calcular el precio total del pedido" >
+    <input type="button" id="button_total_alfombras" onclick="new UserInterface().ShowTotalAlfombras()" value="Calcular el total de Alfombras" >
+    <input type="button" id="button_clean" onclick="new UserInterface().DeleteAlfombras()"  value="Borrar todo" >
 
     <h2>Listado de Alfombras</h2>
     <br><label for=""  >Total de Alfombras</label> <input type="text" id="input_total" value="" />
