@@ -1,12 +1,13 @@
 class AlfombrasBuilder {
-    constructor( pais , precio ,stock ){
+    constructor( pais , precio ,stock ,id){
         this.pais = pais ;
         this.precio = precio;
-        this.stock = stock
+        this.stock = stock;
+        this.id = id
     }
 }
 
-const alfombrasArray = [];
+let alfombrasArray = [];
 
 class UserInterface {
 
@@ -14,14 +15,40 @@ class UserInterface {
 
     ShowTotalPrice () {
         let prices = this.methods.PriceFilter();
-        var precioTotal = prices.reduce(  (a,b)=> parseFloat(a) + parseFloat(b) );
-        this.methods.input_total.value = precioTotal
+        console.log(prices);
+        if ( prices.length > 0 ){
 
+            var precioTotal = prices.reduce(  (a,b)=> parseFloat(a) + parseFloat(b) );
+            this.methods.input_total_precio.value = precioTotal
+
+        } else {
+            alert('Necesita Introducir almenos una alfombra para ver el Precio Toltal')
+        }
+    }
+
+    TotalPriceStock () {
+     let preciosStock = [] ;
+
+        if ( alfombrasArray.length > 0 ){
+
+            for (let i = 0; i < alfombrasArray.length; i++) {
+                if ( alfombrasArray[i].stock === "YES") preciosStock.push(alfombrasArray[i].precio);
+            }
+            let precioStock = preciosStock.reduce(  (a,b)=> parseFloat(a) + parseFloat(b) );
+            this.methods.input_total_precio.value = ""; 
+            this.methods.input_total_precio.value = precioStock ;
+        } else {
+            alert('Introduce Una Alfombra con stock')
+        }
     }
 
     ShowTotalAlfombras() {
-        console.log(alfombrasArray);
-        this.methods.input_total_alfombras.value = alfombrasArray.length;
+        console.log(alfombrasArray.length)
+        if (alfombrasArray.length > 0){
+            this.methods.input_total_alfombras.value = alfombrasArray.length;
+        } else {
+            alert('No introdujo una alfombra aún')
+        }
     }
 
     DeleteAlfombras () {
@@ -32,37 +59,70 @@ class UserInterface {
 
     AddAlfombra (alfombra) {
         let htmlTR = "";
-        htmlTR += "<td>" + alfombra[alfombra.length - 1].pais + "</td>";
-        htmlTR += "<td>" + alfombra[alfombra.length - 1].precio + "</td>";
-        htmlTR += "<td>" + alfombra[alfombra.length - 1].stock + "</td>";
+        htmlTR += ` <td class="pais_td" > ${alfombra[alfombra.length - 1].pais} </td> `;
+        htmlTR += ` <td class="precio_td" > ${alfombra[alfombra.length - 1].precio} </td> `;
+        htmlTR += ` <td class="stock_td" > ${alfombra[alfombra.length - 1].stock} </td> `;
+        htmlTR += ` <td class="id_td" > ${alfombra[alfombra.length - 1].id} </td> `;
+        htmlTR += ` <td> 
+                        <button class="btn btn-danger" 
+                            onclick="new Methods().borrar(this.parentElement.
+                            parentElement,this.parentElement.previousElementSibling)"> 
+                            Delete 
+                        </button>  
+                    </td> `
         this.methods.body.innerHTML += htmlTR;
     }
-
 }
 
 class Methods{
 
     body = document.getElementById('tbody');
-    input_total = document.getElementById('input_total_precio');
+    input_total_precio = document.getElementById('input_total_precio');
     input_total_alfombras = document.getElementById('input_total');
 
     createNewAlfombra(){
         let pais = document.getElementById('input_pais')
         let precio = document.getElementById('input_precio');
         let stock = document.getElementById('input_stock');
+        let identificador = document.getElementById('identificador');
         let stockAsnwer = "";
+
         stock.checked ? stockAsnwer = "YES" : stockAsnwer = "NO";
-        let newAlfombra = new AlfombrasBuilder(pais.value , precio.value ,stockAsnwer);
-        alfombrasArray.push(newAlfombra);
-        let userInterface = new UserInterface();
-        userInterface.AddAlfombra(alfombrasArray)
+
+        console.log(pais.value)
+        console.log(precio.value)
+        console.log(identificador.value)
+
+        if ( pais.value === "" || precio.value === "" || identificador.value === ""  ){
+            alert('Revise y complete los campos Pais , Precio e Identificador')
+        } else {
+
+            let newAlfombra = new AlfombrasBuilder(pais.value , precio.value ,stockAsnwer , identificador.value);
+            let newAlfombraResp = true ;
+
+            for (let i = 0; i < alfombrasArray.length; i++) {
+                newAlfombra.id === alfombrasArray[i].id ? newAlfombraResp = false : newAlfombraResp = true ;
+            }
+
+            
+            if(newAlfombraResp){
+                alfombrasArray.push(newAlfombra);
+                let userInterface = new UserInterface();
+                userInterface.AddAlfombra(alfombrasArray)
+            } else {
+                alert('No puede introducir alfombra con IDENTIFICADOR repetido')
+            }
+        }
     }
 
-    /* ShowTotalAlfombras() {
-        console.log(alfombrasArray);
-        this.input_total_alfombras.value = alfombrasArray.length;
-    } */
-
+    
+    borrar(parent,precioBorrar){
+        parent.remove();
+        let idToFilter = precioBorrar.textContent;
+        let newArray = alfombrasArray.filter((alfombra)=> parseInt(alfombra.id) !== parseInt(idToFilter))
+        alfombrasArray = newArray;
+    }
+    
     PriceFilter () {
 
         let preciosArray = [];
@@ -72,25 +132,4 @@ class Methods{
         }
         return preciosArray;
     }
-
-    /* ShowTotalPrice () {
-        let prices = this.PriceFilter();
-        var precioTotal = prices.reduce(  (a,b)=> parseFloat(a) + parseFloat(b) );
-        this.input_total.value = precioTotal
-
-    } */
-
-   /*  DeleteAlfombras () {
-        this.input_total.value = "";
-        this.body.innerHTML = "";
-        this.input_total_alfombras.value = "";
-    } */
-
-   /*  AddAlfombra (alfombra) {
-     let htmlTR = "";
-     htmlTR += "<td>" + alfombra[alfombra.length - 1].pais + "</td>";
-     htmlTR += "<td>" + alfombra[alfombra.length - 1].precio + "</td>";
-     htmlTR += "<td>" + alfombra[alfombra.length - 1].stock + "</td>";
-     this.body.innerHTML += htmlTR;
-    } */
 }
