@@ -1,0 +1,17 @@
+.banner-container{
+    display:flex;
+    width:100%
+}
+
+/* .banner-container>div{
+    
+    border:1px solid red;
+} */
+
+.h2-container{
+    width:35.3%
+}
+
+.alert-container{
+    width:64.7%;
+}

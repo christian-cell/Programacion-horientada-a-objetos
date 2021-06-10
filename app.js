@@ -72,9 +72,41 @@ class UserInterface {
                     </td> `
         this.methods.body.innerHTML += htmlTR;
     }
+
+    /* showMessage(message , cssClass) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(message));
+        div.className = `alert alert-`+ cssClass;
+        const container = document.getElementById('container');
+        const row = document.getElementById('row');
+        container.insertBefore(div , row);
+ 
+        setTimeout(() => {
+            div.remove();
+        }, 3000);
+ 
+     };
+ */
+    ShowAlert ( message  ,className) {
+        let alertContainer = document.getElementById('alert-container');
+        let div = document.createElement('div');
+        div.appendChild(document.createTextNode(message));
+        div.style.width = "100%";
+        div.style.height = "50px";
+        div.style.padding = "8px";
+        div.style.fontSize = "20px";
+        div.className =  className;
+        alertContainer.appendChild(div)
+
+        setTimeout(() => {
+            div.remove();
+        }, 3000);
+    }
+
 }
 
-class Methods{
+class Methods {
+
 
     body = document.getElementById('tbody');
     input_total_precio = document.getElementById('input_total_precio');
@@ -94,7 +126,11 @@ class Methods{
         console.log(identificador.value)
 
         if ( pais.value === "" || precio.value === "" || identificador.value === ""  ){
-            alert('Revise y complete los campos Pais , Precio e Identificador')
+            let userInterface = new UserInterface();
+             // alert('Revise y complete los campos Pais , Precio e Identificador')
+ 
+            userInterface.ShowAlert('Revise y complete los campos Pais , Precio e Identificador',
+            'btn btn-warning')
         } else {
 
             let newAlfombra = new AlfombrasBuilder(pais.value , precio.value ,stockAsnwer , identificador.value);
@@ -106,11 +142,22 @@ class Methods{
 
             
             if(newAlfombraResp){
+                /* podemos añadir nueva alfombra */
                 alfombrasArray.push(newAlfombra);
                 let userInterface = new UserInterface();
                 userInterface.AddAlfombra(alfombrasArray)
+                stock.checked = false;
+                pais.value = "";
+                precio.value = "";
+                identificador.value = "";
+                // let userInterface = new UserInterface();
+                userInterface.ShowAlert('Alfombra Guardada',
+                'btn btn-success')
             } else {
-                alert('No puede introducir alfombra con IDENTIFICADOR repetido')
+                // alert('No puede introducir alfombra con IDENTIFICADOR repetido')
+                let userInterface = new UserInterface();
+                userInterface.ShowAlert('No puede introducir alfombra con IDENTIFICADOR repetido',
+                'btn btn-danger')
             }
         }
     }
